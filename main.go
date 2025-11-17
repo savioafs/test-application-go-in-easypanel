@@ -1,13 +1,14 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-
 	r := gin.Default()
 
 	r.GET("/ping", func(c *gin.Context) {
@@ -28,4 +29,13 @@ func main() {
 		})
 	})
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("Server running on :" + port)
+	if err := r.Run("0.0.0.0:" + port); err != nil {
+		log.Fatal(err)
+	}
 }
