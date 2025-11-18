@@ -1,13 +1,15 @@
+# syntax=docker/dockerfile:1
+
 # Etapa 1 – build
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Copia go.mod/go.sum e baixa dependências (cache melhor)
+# Dependências
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copia o restante do código
+# Código
 COPY . .
 
 # Build binário estático
@@ -18,13 +20,15 @@ FROM alpine:3.20
 
 WORKDIR /app
 
-# Copia binário
+# Copia binário da etapa de build
 COPY --from=builder /app/app .
 
-# Porta que a app expõe
-EXPOSE 8888
-
-# Variáveis (se quiser default)
+# Define env padrão
 ENV GIN_MODE=release
+ENV PORT=8080
 
+# Documenta a porta (só informativo, mas bom ter)
+EXPOSE 8080
+
+# Comando de start
 CMD ["./app"]
