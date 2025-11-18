@@ -6,9 +6,16 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/savioafs/test-application-go-in-easypanel/internal/database"
+	"github.com/savioafs/test-application-go-in-easypanel/internal/entity"
 )
 
 func main() {
+
+	database.Connect()
+
+	database.DB.AutoMigrate(&entity.User{})
+
 	r := gin.Default()
 
 	r.GET("/ping", func(c *gin.Context) {
@@ -38,4 +45,5 @@ func main() {
 	if err := r.Run("0.0.0.0:" + port); err != nil {
 		log.Fatal(err)
 	}
+
 }
